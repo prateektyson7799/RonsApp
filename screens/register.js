@@ -10,11 +10,14 @@ import {
   Keyboard,
   Alert,
   LogBox,
+  Modal,
 } from "react-native";
 import * as SQLite from "expo-sqlite";
 //import DatePicker from "react-native-datepicker";
 //import DatePicker from 'react-native-date-picker'
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Icon } from "react-native-elements";
+import { MaterialIcons } from "@expo/vector-icons";
 const db = SQLite.openDatabase("RonsDB.db");
 
 const RegisterScreen = ({ navigation }) => {
@@ -27,28 +30,18 @@ const RegisterScreen = ({ navigation }) => {
   const [hobby, setHobby] = useState("");
   const [favoriteGenre, setFavoriteGenre] = useState("");
 
-const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
+  const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
     setShow(false);
-    setDate(currentDate);
-    setDateOfBirth();
-  };
-
-  const showMode = (currentMode) => {
-    if (Platform.OS === 'android') {
-      setShow(true);
-    }else{
-      setShow(true);
+    if (selectedDate) {
+      setDate(selectedDate);
     }
-    setMode(currentMode);
   };
 
   const showDatepicker = () => {
-    showMode('date');
+    setShow(true);
   };
 
   const handleRegister = () => {
@@ -56,7 +49,7 @@ const [date, setDate] = useState(new Date());
       username === "" ||
       email === "" ||
       phoneNumber === "" ||
-     // dateOfBirth === "" ||
+      // dateOfBirth === "" ||
       password === "" ||
       confirmPassword === "" ||
       hobby === "" ||
@@ -192,19 +185,48 @@ const [date, setDate] = useState(new Date());
           value={phoneNumber}
           onChangeText={setPhoneNumber}
         />
-        <View style={styles.datepicker}>
-        <TextInput style={styles.input} 
-        placeholder="Date of Birth" 
-        placeholderTextColor="gray"
-        value={date.toLocaleDateString()}></TextInput><Button onPress={showDatepicker} title="Date of Birth" />
-        {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={'date'}
-          is24Hour={true}
-          onChange={onChange}/>
-        )}
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            style={styles.inputdate}
+            placeholder="Date of Birth"
+            placeholderTextColor="gray"
+            value={date ? date.toLocaleDateString() : "Date of birth"}
+            editable={false} // Set TextInput to non-editable
+          ></TextInput>
+          <View style={styles.iconContainer}>
+            <Icon
+              name="calendar"
+              onPress={showDatepicker}
+              type="material-community"
+              color="white"
+              component={MaterialIcons}
+            />
+          </View>
+          {show && (
+            <View
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "black", // Set a contrasting background color
+                opacity: 20, // Set opacity to make it semi-transparent
+              }}
+            >
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                textColor="white"
+                mode={"date"}
+                display="spinner"
+                is24Hour={true}
+                onChange={onChange}
+              />
+            </View>
+          )}
         </View>
         <TextInput
           style={styles.input}
@@ -277,9 +299,21 @@ const styles = StyleSheet.create({
     borderBottomColor: "gray",
     color: "white",
   },
+  inputdate: {
+    width: "100%",
+    height: 40,
+    borderRadius: 4,
+    padding: 8,
+    left: 13,
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "gray",
+    color: "white",
+  },
   datepicker: {
-    width:'100%',
-    marginBottom: 16, 
+    width: "100%",
+    marginBottom: 16,
+    // flexDirection: "row",
   },
   registerButton: {
     width: "100%",
@@ -308,6 +342,10 @@ const styles = StyleSheet.create({
     color: "#rgb(0, 149, 246)",
     fontSize: 16,
     textAlign: "center",
+  },
+  iconContainer: {
+    left: -13,
+    bottom: -10,
   },
 });
 
