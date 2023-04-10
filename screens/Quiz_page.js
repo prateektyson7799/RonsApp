@@ -1,12 +1,65 @@
-import React from "react";
-import { StyleSheet,SafeAreaView, Text, View, TouchableOpacity, Image } from "react-native";
+import React,{useEffect} from "react";
+import { StyleSheet,SafeAreaView, Text, View, TouchableOpacity, Image, Alert } from "react-native";
 import localImage from "../assets/logo.png";
 import { Icon } from 'react-native-elements'
 import { StatusBar } from "expo-status-bar";
 import * as Progress from 'react-native-progress';
-
-
+import * as SQLite from "expo-sqlite";
+const db = SQLite.openDatabase("RonsDB.db");
+const ID = 1;
 const QuizScreen = ({ navigation }) => {
+  useEffect(()=> {
+  db.transaction((tx) => {
+    tx.executeSql(
+      "CREATE TABLE IF NOT EXISTS quiz_info (uid INTEGER PRIMARY KEY, qid INTEGER PRIMARY KEY, q_sid INTEGER)"
+    );
+    tx.executeSql("SELECT * FROM QUIZ_INFO WHERE uid = ?",[ID],(_, result) => {
+      if (result.rows.length < 5) {
+        tx.executeSql(
+          "INSERT INTO quiz_info (uid, qid, q_sid ) VALUES (?, ?, ?)",
+          [
+            ID,
+            1,
+            0,
+          ]
+        );
+        tx.executeSql(
+          "INSERT INTO quiz_info (uid, qid, q_sid ) VALUES (?, ?, ?)",
+          [
+            ID,
+            2,
+            0,
+          ]
+        );
+        tx.executeSql(
+          "INSERT INTO quiz_info (uid, qid, q_sid ) VALUES (?, ?, ?)",
+          [
+            ID,
+            3,
+            0,
+          ]
+        );
+        tx.executeSql(
+          "INSERT INTO quiz_info (uid, qid, q_sid ) VALUES (?, ?, ?)",
+          [
+            ID,
+            4,
+            0,
+          ]
+        );
+        tx.executeSql(
+          "INSERT INTO quiz_info (uid, qid, q_sid ) VALUES (?, ?, ?)",
+          [
+            ID,
+            5,
+            0,
+          ]
+        );
+      }else{
+        Alert.alert(result);
+      }
+    });
+  })});
   return (
     <SafeAreaView>
        <View style={styles.backButton}>

@@ -16,11 +16,11 @@ export default function App() {
           headerShown: false,
         }}
       >
-        
+        <Stack.Screen name="Quiz" component={QuizScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Menu" component={MenuScreen} />
-        <Stack.Screen name="Quiz" component={QuizScreen} />
+        
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       </Stack.Navigator>
